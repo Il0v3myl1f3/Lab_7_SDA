@@ -4,6 +4,7 @@
 
 #include "structs.h"
 void student_management_menu(StudentArray *student_array);
+
 StudentArray *init_read_students();
 void init_declarations(Student *student);
 StudentArray *init_students_array();
