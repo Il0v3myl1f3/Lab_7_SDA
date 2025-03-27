@@ -11,7 +11,7 @@
 #define INPUT_ERROR_CODE -2
 #define AGE_NUMBER_LIMIT 3
 #define GRADE_NUMBER_LIMIT 2
-#define SORINTG_NUMBER_LIMIT 1
+#define SORTING_NUMBER_LIMIT 1
 #define CLEAR_SCREEN() printf("\e[2J\e[H")
 
 typedef enum {
