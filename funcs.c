@@ -157,7 +157,6 @@ int _read_student_grade() {
 }
 
 
-
 void _read_student_grades(Student *student) {
     assert(student);
     printf("Enter %d grades:\n", student->grades.size);
