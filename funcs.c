@@ -1,5 +1,4 @@
 #include "funcs.h"
-#include "structs.h"
 #include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -157,6 +156,8 @@ int _read_student_grade() {
     return new_grade;
 }
 
+
+
 void _read_student_grades(Student *student) {
     assert(student);
     printf("Enter %d grades:\n", student->grades.size);
@@ -231,7 +232,6 @@ void insert_student_at_end(StudentArray *student_array) {
     init_declarations(&student_array->students[student_array->size - 1]);
 }
 
-
 void insert_grade_at_any_position(StudentArray *student_array) {
     assert(student_array);
     int student_index = get_student_position(student_array);
@@ -243,7 +243,7 @@ void insert_grade_at_any_position(StudentArray *student_array) {
     if (new_grade_position == POSITION_ERROR_CODE)
         return;
 
-    int new_grade = get_new_grade();
+    int new_grade = _read_student_grade();
     check_grades_array_size(student);
 
     int grade_position = new_grade_position - 1;
@@ -413,9 +413,9 @@ void print_menu() {
 
 int get_student_position(StudentArray *student_array) {
     assert(student_array);
-    int student_index;
+    char buffer[MAX_STRING_SIZE];
     printf("Enter student position to modify (1 to %d): ", student_array->size);
-    scanf("%d", &student_index);
+    int student_index = safe_scanf(buffer,GRADE_NUMBER_LIMIT);
     if (student_index < 1 || student_index > student_array->size) {
         printf(POSITION_ERROR);
         return POSITION_ERROR_CODE;
@@ -425,9 +425,9 @@ int get_student_position(StudentArray *student_array) {
 
 int get_grade_position(Student *student) {
     assert(student);
-    int new_position;
-    printf("Enter grade position to insert (1 to %d): ", student->grades.size + 1);
-    scanf("%d", &new_position);
+    char buffer[MAX_STRING_SIZE];
+    printf("Enter grade position to modify (1 to %d): ", student->grades.size + 1);
+    int new_position = safe_scanf(buffer,GRADE_NUMBER_LIMIT);
     if (new_position < 1 || new_position > student->grades.size + 1) {
         printf(POSITION_ERROR);
         return POSITION_ERROR_CODE;
@@ -437,13 +437,6 @@ int get_grade_position(Student *student) {
         return POSITION_ERROR_CODE;
     }
     return new_position;
-}
-
-int get_new_grade() {
-    int new_grade;
-    printf("Enter new grade: ");
-    scanf("%d", &new_grade);
-    return new_grade;
 }
 
 void _realloc_student_array(StudentArray *student_array) {
