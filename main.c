@@ -5,5 +5,4 @@ int main(void) {
     StudentArray *student_array = NULL;
     student_management_menu(student_array);
     return 0;
-
 }

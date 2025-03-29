@@ -156,7 +156,6 @@ int _read_student_grade() {
     return new_grade;
 }
 
-
 void _read_student_grades(Student *student) {
     assert(student);
     printf("Enter %d grades:\n", student->grades.size);
@@ -323,7 +322,7 @@ void free_students_array(StudentArray *student_array) {
     free(student_array);
 }
 
-void print_sorting_criteria() {
+void print_sorting_criteria(void) {
     printf("Sort by:\n");
     printf("1. Name\n");
     printf("2. Age\n");
@@ -394,7 +393,7 @@ int search_student_by_grade(StudentArray *student_array, int target_grade) {
     return POSITION_ERROR_CODE;
 }
 
-void print_menu() {
+void print_menu(void) {
     printf("\n\tMENU\n");
     printf("0. Initialize student array\n");
     printf("1. Search by name\n");

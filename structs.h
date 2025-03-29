@@ -3,17 +3,20 @@
 
 #define INITIAL_CAPACITY 1
 #define DEFAULT_GRADE_CAPACITY 1
+#define MAX_STRING_SIZE 100
+#define NULL ((void *)0)
+
 #define SORTING_ERROR "Invalid sorting criteria.\n"
 #define POSITION_ERROR "Invalid position.\n"
 #define POSITION_ERROR_CODE -1
-#define MAX_STRING_SIZE 100
 #define INPUT_ERROR "Invalid input.\n"
 #define INPUT_ERROR_CODE -2
 #define AGE_NUMBER_LIMIT 3
 #define GRADE_NUMBER_LIMIT 2
 #define SORTING_NUMBER_LIMIT 1
+
 #define CLEAR_SCREEN() printf("\e[2J\e[H")
-#define NULL 0
+
 
 typedef enum {
 INIT_STUDENT_ARRAY = 0,
