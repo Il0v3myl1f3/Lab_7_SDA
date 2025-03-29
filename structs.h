@@ -13,6 +13,7 @@
 #define GRADE_NUMBER_LIMIT 2
 #define SORTING_NUMBER_LIMIT 1
 #define CLEAR_SCREEN() printf("\e[2J\e[H")
+#define NULL 0
 
 typedef enum {
 INIT_STUDENT_ARRAY = 0,
