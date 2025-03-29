@@ -111,7 +111,7 @@ void student_management_menu(StudentArray *student_array) {
 
 int safe_scanf(char *buffer, int validation_number){
     fflush(stdin);
-    if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
+    if (fgets(buffer, MAX_STRING_SIZE, stdin) == NULL) {
         return INPUT_ERROR_CODE;
     }
 
