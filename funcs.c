@@ -109,7 +109,7 @@ void student_management_menu(StudentArray *student_array) {
     }
 }
 
-int safe_scanf(int *value,int validation_number) {
+int safe_scanf(int *value, int validation_number) {
     char buffer[MAX_STRING_SIZE];
     char *endptr;
 
@@ -138,7 +138,7 @@ int safe_scanf(int *value,int validation_number) {
     if (*endptr != '\0' || endptr == buffer) {
         return INPUT_ERROR_CODE;
     }
-    *value = (int)result;
+    *value = (int) result;
     return 0;
 }
 
