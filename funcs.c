@@ -109,7 +109,10 @@ void student_management_menu(StudentArray *student_array) {
     }
 }
 
-int safe_scanf(char *buffer, int validation_number) {
+int safe_scanf(int *value,int validation_number) {
+    char buffer[MAX_STRING_SIZE];
+    char *endptr;
+
     if (fgets(buffer, MAX_STRING_SIZE, stdin) == NULL) {
         return INPUT_ERROR_CODE;
     }
@@ -130,7 +133,13 @@ int safe_scanf(char *buffer, int validation_number) {
         }
     }
 
-    return atoi(buffer);
+    long int result = strtol(buffer, &endptr, 10);
+
+    if (*endptr != '\0' || endptr == buffer) {
+        return INPUT_ERROR_CODE;
+    }
+    *value = (int)result;
+    return 0;
 }
 
 int _read_student_age() {
