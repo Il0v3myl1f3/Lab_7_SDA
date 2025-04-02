@@ -8,11 +8,11 @@
 void student_management_menu(StudentArray *student_array) {
     int input;
     do {
-        char buffer[MAX_STRING_SIZE];
         print_menu();
         int validation_number = 2;
-        input = safe_scanf(buffer, validation_number);
-        if (input == INPUT_ERROR_CODE) {
+        int input_error_code = safe_scanf(&input, validation_number);
+        if (input_error_code == INPUT_ERROR_CODE) {
+            input = input_error_code;
             printf(INPUT_ERROR);
             continue;
         }
@@ -48,7 +48,10 @@ void student_management_menu(StudentArray *student_array) {
             case SEARCH_BY_AGE: {
                 int target_age;
                 printf("Enter searched age: ");
-                scanf("%d", &target_age);
+                if (safe_scanf(&target_age, AGE_NUMBER_LIMIT) == INPUT_ERROR_CODE) {
+                    printf(INPUT_ERROR);
+                    continue;
+                }
                 int position = search_student_by_age(student_array, target_age);
                 if (position == POSITION_ERROR_CODE) {
                     printf(POSITION_ERROR);
@@ -60,7 +63,10 @@ void student_management_menu(StudentArray *student_array) {
             case SEARCH_BY_GRADE: {
                 int target_grade;
                 printf("Enter searched grade: ");
-                scanf("%d", &target_grade);
+                if (safe_scanf(&target_grade, GRADE_NUMBER_LIMIT) == INPUT_ERROR_CODE) {
+                    printf(INPUT_ERROR);
+                    continue;
+                }
                 int position = search_student_by_grade(student_array, target_grade);
                 if (position == POSITION_ERROR_CODE) {
                     printf(POSITION_ERROR);
@@ -70,9 +76,12 @@ void student_management_menu(StudentArray *student_array) {
                 break;
             }
             case SORT_STUDENTS_BY_CRITERIA: {
-                char sort_buffer[MAX_STRING_SIZE];
                 print_sorting_criteria();
-                int criteria = safe_scanf(sort_buffer, SORTING_NUMBER_LIMIT);
+                int criteria;
+                if (safe_scanf(&criteria, SORTING_NUMBER_LIMIT) == INPUT_ERROR_CODE) {
+                    printf(INPUT_ERROR);
+                    continue;
+                }
                 sort_students_array(student_array, criteria);
                 break;
             }
@@ -110,6 +119,7 @@ void student_management_menu(StudentArray *student_array) {
 }
 
 int safe_scanf(int *value, int validation_number) {
+    // fflush(stdin);
     char buffer[MAX_STRING_SIZE];
     char *endptr;
 
@@ -143,23 +153,23 @@ int safe_scanf(int *value, int validation_number) {
 }
 
 int _read_student_age() {
-    char buffer[MAX_STRING_SIZE];
     printf("Enter student age: ");
-    int student_age = safe_scanf(buffer, AGE_NUMBER_LIMIT);
-    if(student_age == INPUT_ERROR_CODE){
+    int student_age;
+    int student_age_error_code = safe_scanf(&student_age, AGE_NUMBER_LIMIT);
+    if (student_age_error_code == INPUT_ERROR_CODE) {
         printf(INPUT_ERROR);
-        exit(INPUT_ERROR_CODE);
+        return INPUT_ERROR_CODE;
     }
     return student_age;
 }
 
 int _read_student_grade() {
-    char buffer[MAX_STRING_SIZE];
     printf("Grade: ");
-    int new_grade = safe_scanf(buffer, GRADE_NUMBER_LIMIT);
-    if(new_grade == INPUT_ERROR_CODE){
+    int new_grade;
+    int new_grade_error_code = safe_scanf(&new_grade, GRADE_NUMBER_LIMIT);
+    if (new_grade_error_code == INPUT_ERROR_CODE) {
         printf(INPUT_ERROR);
-        exit(INPUT_ERROR_CODE);
+        return INPUT_ERROR_CODE;
     }
     return new_grade;
 }
@@ -176,14 +186,19 @@ char *_read_student_name() {
     char *student_name = calloc(MAX_STRING_SIZE, sizeof(char));
     printf("Enter student name: ");
     scanf("%s", student_name);
-    student_name[strlen(student_name)] = '\0';
+    getchar();
     return student_name;
 }
 
 void read_student_info(Student *student) {
     assert(student);
     student->name = _read_student_name();
-    student->age = _read_student_age();
+    int age = _read_student_age();
+    if (age == INPUT_ERROR_CODE) {
+        free(student->name);
+        return;
+    }
+    student->age = age;
     _read_student_grades(student);
 }
 
@@ -245,7 +260,7 @@ void insert_grade_at_any_position(StudentArray *student_array) {
         return;
 
     Student *student = &student_array->students[student_index - 1];
-    int new_grade_position = get_grade_position(student);
+    int new_grade_position = get_grade_position_for_insertion(student);
     if (new_grade_position == POSITION_ERROR_CODE)
         return;
 
@@ -259,6 +274,25 @@ void insert_grade_at_any_position(StudentArray *student_array) {
     student->grades.array[grade_position] = new_grade;
     student->grades.size++;
 }
+
+
+int get_grade_position_for_insertion(Student *student) {
+    assert(student);
+    // Allow insertion even if there are no grades.
+    printf("Enter grade position to insert (1 to %d): ", student->grades.size + 1);
+    int new_position;
+    int error_code_for_position = safe_scanf(&new_position, GRADE_NUMBER_LIMIT);
+    if (error_code_for_position == INPUT_ERROR_CODE) {
+        printf(INPUT_ERROR);
+        return POSITION_ERROR_CODE;
+    }
+    if (new_position < 1 || new_position > student->grades.size + 1) {
+        printf(POSITION_ERROR);
+        return POSITION_ERROR_CODE;
+    }
+    return new_position;
+}
+
 
 void delete_grade_at_any_position(StudentArray *student_array) {
     assert(student_array);
@@ -419,9 +453,9 @@ void print_menu(void) {
 
 int get_student_position(StudentArray *student_array) {
     assert(student_array);
-    char buffer[MAX_STRING_SIZE];
     printf("Enter student position to modify (1 to %d): ", student_array->size);
-    int student_index = safe_scanf(buffer,GRADE_NUMBER_LIMIT);
+    int student_index;
+    int student_index_error = safe_scanf(&student_index,GRADE_NUMBER_LIMIT);
     if (student_index < 1 || student_index > student_array->size) {
         printf(POSITION_ERROR);
         return POSITION_ERROR_CODE;
@@ -431,9 +465,13 @@ int get_student_position(StudentArray *student_array) {
 
 int get_grade_position(Student *student) {
     assert(student);
-    char buffer[MAX_STRING_SIZE];
     printf("Enter grade position to modify (1 to %d): ", student->grades.size + 1);
-    int new_position = safe_scanf(buffer,GRADE_NUMBER_LIMIT);
+    int new_position;
+    int error_code_for_position = safe_scanf(&new_position,GRADE_NUMBER_LIMIT);
+    if (error_code_for_position == INPUT_ERROR_CODE) {
+        printf(INPUT_ERROR);
+        return POSITION_ERROR_CODE;
+    }
     if (new_position < 1 || new_position > student->grades.size + 1) {
         printf(POSITION_ERROR);
         return POSITION_ERROR_CODE;

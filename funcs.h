@@ -11,18 +11,18 @@ void student_management_menu(StudentArray *student_array);
 
 /**
  * Securely scans and validates user input.
- * @param buffer Character buffer to store input.
+ * @param value Character buffer to store input.
  * @param validation_number Maximum allowed length of input.
  * @return Valid integer input or an error code.
  */
-int safe_scanf(char *buffer, int validation_number);
+int safe_scanf(int *value,int validation_number);
 
 /**
  * Reads and validates a student’s age from user input.
  * @return The valid student age.
  */
 int _read_student_age(void);
-
+int get_grade_position_for_insertion(Student *student);
 /**
  * Reads and validates a student’s grade from user input.
  * @return The valid grade entered by the user.
